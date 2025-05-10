@@ -1,0 +1,298 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    :root {
+        --primary: #ff8c00;
+        --primary-light: #e6b17f;
+        --secondary: #9b6b47;
+        --accent: #d4a373;
+        --bg-primary: #faf6f1;
+        --bg-secondary: #ffffff;
+        --text-primary: #4a4a4a;
+        --text-secondary: #786d64;
+    }
+
+    .register-page-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - 180px);
+        padding: 2rem 0;
+    }
+
+    .register-container {
+        background: var(--bg-secondary);
+        border-radius: 25px;
+        padding: 40px;
+        box-shadow: 0 20px 40px rgba(193, 127, 89, 0.2);
+        width: 100%;
+        max-width: 400px;
+        animation: slideUp 0.5s ease;
+        position: relative;
+        overflow: hidden;
+        margin: auto;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .register-header {
+        text-align: center;
+        margin-bottom: 35px;
+    }
+
+    .register-header h2 {
+        color: var(--primary);
+        margin-bottom: 12px;
+        font-size: 2.2em;
+        font-weight: 700;
+    }
+
+    .register-header p {
+        color: var(--text-secondary);
+        font-size: 1.1em;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 10px;
+        color: var(--text-primary);
+        font-weight: 600;
+        font-size: 1.1em;
+    }
+
+    .input-icon {
+        position: relative;
+    }
+
+    .input-icon i {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .input-icon i:hover {
+        color: var(--primary);
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 15px;
+        border: 2px solid rgba(193, 127, 89, 0.2);
+        border-radius: 15px;
+        font-size: 1.1em;
+        transition: all 0.3s ease;
+        background: var(--bg-primary);
+        color: var(--text-primary);
+    }
+
+    .form-control:focus {
+        border-color: var(--primary);
+        outline: none;
+        box-shadow: 0 0 0 4px rgba(193, 127, 89, 0.1);
+        background: var(--bg-secondary);
+    }
+
+    .register-btn {
+        width: 100%;
+        padding: 15px;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+        border: none;
+        border-radius: 15px;
+        color: white;
+        font-size: 1.2em;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 10px;
+    }
+
+    .register-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(193, 127, 89, 0.2);
+    }
+
+    .register-btn:active {
+        transform: translateY(0);
+    }
+
+    .login-link {
+        text-align: center;
+        margin-top: 25px;
+        color: var(--text-secondary);
+        font-size: 1.1em;
+    }
+
+    .login-link a {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .login-link a:hover {
+        color: var(--primary-light);
+        text-decoration: underline;
+    }
+
+    .alert {
+        padding: 15px;
+        border-radius: 15px;
+        margin-bottom: 25px;
+        background: rgba(255, 82, 82, 0.1);
+        color: #ff5252;
+        text-align: center;
+        font-weight: 500;
+        border: 1px solid rgba(255, 82, 82, 0.2);
+        animation: shake 0.5s ease;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
+    }
+
+    .password-requirements {
+        font-size: 0.9em;
+        color: var(--text-secondary);
+        margin-top: 8px;
+        padding: 10px;
+        border-radius: 10px;
+        background: rgba(193, 127, 89, 0.05);
+    }
+
+    .password-requirements i {
+        color: var(--primary);
+        margin-right: 5px;
+    }
+
+    .decoration {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        background: linear-gradient(135deg, var(--primary-light) 0%, transparent 60%);
+        border-radius: 50%;
+        opacity: 0.1;
+        z-index: -1;
+    }
+
+    .decoration-1 {
+        top: -50px;
+        left: -50px;
+    }
+
+    .decoration-2 {
+        bottom: -50px;
+        right: -50px;
+        transform: rotate(180deg);
+    }
+</style>
+
+<div class="register-page-wrapper">
+    <div class="register-container">
+        <div class="decoration decoration-1"></div>
+        <div class="decoration decoration-2"></div>
+
+        <div class="register-header">
+            <h2>Create Account </h2>
+            <p>Join us and start taking quizzes!</p>
+        </div>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert">
+                        <i class="fas fa-exclamation-circle"></i>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <div class="input-icon">
+                    <input type="text" 
+                           class="form-control" 
+                           id="username" 
+                           name="username" 
+                           placeholder="Choose a username"
+                           required>
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <div class="input-icon">
+                    <input type="email" 
+                           class="form-control" 
+                           id="email" 
+                           name="email" 
+                           placeholder="Enter your email"
+                           required>
+                    <i class="fas fa-envelope"></i>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-icon">
+                    <input type="password" 
+                           class="form-control" 
+                           id="password" 
+                           name="password" 
+                           placeholder="Create a password"
+                           required>
+                    <i class="fas fa-eye" id="togglePassword"></i>
+                </div>
+                <div class="password-requirements">
+                    <i class="fas fa-info-circle"></i>
+                    Password should be at least 6 characters long
+                </div>
+            </div>
+
+            <button type="submit" class="register-btn">
+                <i class="fas fa-user-plus"></i> Create Account
+            </button>
+        </form>
+
+        <div class="login-link">
+            Already have an account? <a href="{{ url_for('login') }}">Login here</a>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<script>
+    const togglePassword = document.querySelector('#togglePassword');
+    const password = document.querySelector('#password');
+
+    togglePassword.addEventListener('click', function (e) {
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+        this.classList.toggle('fa-eye');
+        this.classList.toggle('fa-eye-slash');
+    });
+</script>
+{% endblock %}

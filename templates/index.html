@@ -1,0 +1,353 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+        min-height: calc(100vh - 80px);
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .dashboard {
+        display: grid;
+        grid-template-columns: 350px 1fr;
+        gap: 30px;
+        height: 100%;
+    }
+
+    .sidebar {
+        background: white;
+        border-radius: 25px;
+        padding: 30px;
+        box-shadow: 0 4px 20px rgba(255, 140, 0, 0.1);
+        height: fit-content;
+        position: sticky;
+        top: 100px;
+    }
+
+    .main-content {
+        background: white;
+        border-radius: 25px;
+        padding: 30px;
+        box-shadow: 0 4px 20px rgba(255, 140, 0, 0.1);
+    }
+
+    .search-section {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .search-title {
+        color: #ff8c00;
+        margin-bottom: 20px;
+        font-size: 2.2em;
+        font-weight: 700;
+        text-shadow: 2px 2px 4px rgba(255, 140, 0, 0.1);
+    }
+
+    .search-subtitle {
+        color: #ffa500;
+        margin-bottom: 30px;
+        font-size: 1.1em;
+        opacity: 0.8;
+    }
+
+    .weather-form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .weather-input {
+        padding: 18px 25px;
+        border: 2px solid rgba(255, 140, 0, 0.2);
+        border-radius: 15px;
+        background: white;
+        color: #ff8c00;
+        width: 100%;
+        font-size: 16px;
+        transition: all 0.3s ease;
+    }
+
+    .weather-input:focus {
+        outline: none;
+        border-color: #ff8c00;
+        box-shadow: 0 0 20px rgba(255, 140, 0, 0.1);
+    }
+
+    .weather-input::placeholder {
+        color: rgba(255, 140, 0, 0.5);
+    }
+
+    .weather-button {
+        padding: 18px 25px;
+        border: none;
+        border-radius: 15px;
+        background: linear-gradient(90deg, #ff8c00 0%, #ffa500 100%);
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .weather-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 140, 0, 0.3);
+    }
+
+    .date-widget {
+        background: linear-gradient(135deg, #ff8c00 0%, #ffa500 100%);
+        border-radius: 20px;
+        padding: 25px;
+        color: white;
+        text-align: center;
+        margin-top: 30px;
+        box-shadow: 0 4px 15px rgba(255, 140, 0, 0.2);
+    }
+
+    .date-widget .time {
+        font-size: 2.8em;
+        font-weight: 700;
+        margin-bottom: 5px;
+        letter-spacing: 2px;
+    }
+
+    .date-widget .day {
+        font-size: 1.6em;
+        margin-bottom: 5px;
+        font-weight: 600;
+    }
+
+    .date-widget .date {
+        font-size: 1.1em;
+        opacity: 0.9;
+    }
+
+    .weather-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+    }
+
+    .weather-card {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        text-align: center;
+        color: #ff8c00;
+        transition: all 0.3s ease;
+        border: 2px solid rgba(255, 140, 0, 0.1);
+    }
+
+    .weather-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(255, 140, 0, 0.1);
+        border-color: #ff8c00;
+    }
+
+    .weather-card h3 {
+        font-size: 1.8em;
+        margin-bottom: 15px;
+        color: #ff8c00;
+        font-weight: 700;
+    }
+
+    .weather-icon {
+        width: 120px;
+        height: 120px;
+        margin: 15px auto;
+        filter: drop-shadow(0 4px 6px rgba(255, 140, 0, 0.2));
+    }
+
+    .weather-temp {
+        font-size: 3.5em;
+        margin: 20px 0;
+        font-weight: 700;
+        background: linear-gradient(90deg, #ff8c00 0%, #ffa500 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .weather-desc {
+        font-size: 1.3em;
+        color: #ffa500;
+        text-transform: capitalize;
+        margin-bottom: 20px;
+        font-weight: 600;
+    }
+
+    .weather-details {
+        background: rgba(255, 140, 0, 0.05);
+        border-radius: 15px;
+        padding: 20px;
+        margin-top: 20px;
+    }
+
+    .detail-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 12px;
+        border-bottom: 1px solid rgba(255, 140, 0, 0.1);
+    }
+
+    .detail-item:last-child {
+        border-bottom: none;
+    }
+
+    .detail-item i {
+        color: #ff8c00;
+        font-size: 1.2em;
+        width: 25px;
+    }
+
+    .detail-item span {
+        color: #ffa500;
+        font-weight: 500;
+    }
+
+    .city-name {
+        font-size: 2.2em;
+        color: #ff8c00;
+        margin-bottom: 30px;
+        text-align: center;
+        font-weight: 700;
+    }
+
+    @media (max-width: 1024px) {
+        .dashboard {
+            grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+            position: static;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            padding: 15px;
+        }
+
+        .weather-cards {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="container">
+    <div class="dashboard">
+        <div class="sidebar">
+            <div class="search-section">
+                <h1 class="search-title">Weather Forecast</h1>
+                <p class="search-subtitle">Check weather conditions worldwide</p>
+                <form method="POST" class="weather-form">
+                    <input type="text" 
+                           name="city" 
+                           placeholder="Enter city name..." 
+                           class="weather-input" 
+                           required>
+                    <button type="submit" class="weather-button">
+                        <i class="fas fa-search"></i> Search Weather
+                    </button>
+                </form>
+            </div>
+
+            <div class="date-widget">
+                <div class="time" id="current-time"></div>
+                <div class="day" id="current-day"></div>
+                <div class="date" id="current-date"></div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            {% if weather_data %}
+            <h2 class="city-name">
+                <i class="fas fa-map-marker-alt"></i> 
+                {{ weather_data.city }}, {{ weather_data.country }}
+            </h2>
+            <div class="weather-cards">
+                {% for forecast in weather_data.forecasts %}
+                <div class="weather-card">
+                    <h3>
+                        {% if forecast.date == today %}
+                            Today
+                        {% elif forecast.date < today %}
+                            Yesterday
+                        {% else %}
+                            Tomorrow
+                        {% endif %}
+                    </h3>
+                    <p class="weather-date">{{ forecast.date }}</p>
+                    <img src="http://openweathermap.org/img/w/{{ forecast.icon }}.png" 
+                         alt="weather icon" 
+                         class="weather-icon">
+                    <div class="weather-main-info">
+                        <p class="weather-temp">{{ forecast.temp }}°C</p>
+                        <p class="weather-desc">{{ forecast.description }}</p>
+                    </div>
+                    <div class="weather-details">
+                        <div class="detail-item">
+                            <i class="fas fa-thermometer-half"></i>
+                            <span>Feels like: {{ forecast.feels_like }}°C</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-tint"></i>
+                            <span>Humidity: {{ forecast.humidity }}%</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-wind"></i>
+                            <span>Wind: {{ forecast.wind_speed }} m/s</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-compress-alt"></i>
+                            <span>Pressure: {{ forecast.pressure }} hPa</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div style="text-align: center; color: #ffa500; padding: 50px;">
+                <i class="fas fa-cloud-sun" style="font-size: 5em; margin-bottom: 20px;"></i>
+                <h2>Enter a city name to see the weather forecast</h2>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<script>
+    function updateDateTime() {
+        const now = new Date();
+        
+        const time = now.toLocaleTimeString('en-US', { 
+            hour: '2-digit', 
+            minute: '2-digit',
+            hour12: false 
+        });
+        document.getElementById('current-time').textContent = time;
+
+        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        const day = days[now.getDay()];
+        document.getElementById('current-day').textContent = day;
+
+        const date = now.toLocaleDateString('en-US', { 
+            day: 'numeric', 
+            month: 'long', 
+            year: 'numeric' 
+        });
+        document.getElementById('current-date').textContent = date;
+    }
+
+    updateDateTime();
+    setInterval(updateDateTime, 1000);
+</script>
+{% endblock %}
